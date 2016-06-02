@@ -12,7 +12,9 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
       }    
     end
     assert_template 'users/new'
-    assert_select '#error_explanation ul li', 4
+    assert_select '#error_explanation ul li' do |elements|
+      elements.count > 0
+    end
   end
 
   test "valid signup information" do
@@ -26,5 +28,6 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
       }
     end
     assert_template 'users/show'
+    assert_not flash.empty?
   end
 end
