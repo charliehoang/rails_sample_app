@@ -30,7 +30,7 @@ class SessionsController < ApplicationController
   end
 
   def user
-    User.find_by(email: session_params[:email].downcase)
+    @user ||= User.find_by(email: session_params[:email].downcase)
   end
 
   def authenticated?
