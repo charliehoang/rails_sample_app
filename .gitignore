@@ -21,3 +21,6 @@
 
 # Ignore .DS_Store files anywhere
 **/.DS_Store
+
+# Ignore uploaded test images
+/public/uploads

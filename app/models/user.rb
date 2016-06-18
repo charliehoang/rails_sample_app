@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
                       allow_nil: true
 
   before_create :create_activation_digest
+  has_many :microposts, dependent: :destroy
 
   # Returns the hash digest of the given string.
   def self.digest(string)
@@ -77,6 +78,10 @@ class User < ActiveRecord::Base
   # Returns true if a password reset has expired
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
+  end
+
+  def feed
+    Micropost.where("user_id = ?", id)
   end
 
   private 
