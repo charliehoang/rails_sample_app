@@ -88,10 +88,6 @@ class User < ActiveRecord::Base
     reset_sent_at < 2.hours.ago
   end
 
-  def feed
-    Micropost.where("user_id = ?", id)
-  end
-
   # Follows a user.
   def follow(other_user)
     active_relationships.create(followed_id: other_user.id)
@@ -107,11 +103,24 @@ class User < ActiveRecord::Base
     following.include?(other_user)
   end
 
+  # Returns the status feed for the user
+  def feed
+    Micropost.where(feed_sql) 
+  end
+
   private 
 
   # Creates an activation digest
   def create_activation_digest
     self.activation_token = User.new_token
     self.activation_digest = User.digest(activation_token)
+  end
+
+  def feed_sql
+    "user_id IN (#{following_ids_sql}) OR user_id = #{id}"
+  end
+
+  def following_ids_sql
+    "SELECT followed_id FROM relationships WHERE follower_id = #{id}"
   end
 end
